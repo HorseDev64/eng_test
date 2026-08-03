@@ -1,6 +1,3 @@
-
-
-```md
 # Build Instructions
 
 This document explains how to build the project and its dependencies using **CMake** on both **Windows** and **Linux (WSL)**.
