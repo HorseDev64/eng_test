@@ -1,7 +1,5 @@
 #include "graphics.h"
 #include "math/vector.h"
-#include <X11/Xlib.h>
-#include <math.h>
 #define VERTEX_SHADER_DIR "src/shaders/vertex_shader.glsl"
 #define FRAGMENT_SHADER_DIR "src/shaders/fragment_shader.glsl"
 #define SHADERS_DIR "src/shaders/"
