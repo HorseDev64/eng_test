@@ -1,0 +1,45 @@
+# Archivos de objeto y binarios
+*.o
+*.obj
+*.exe
+*.bin
+*.app
+*.lib
+*.dll
+*.so
+*.dylib
+
+# Directorios de compilación comunes
+build/
+build_linux/
+build_win/
+bin/
+obj/
+libs/
+external/
+
+# Archivos específicos de sistemas de compilación (ej. CMake, Visual Studio)
+.cmake/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+[Mm]akefile.Debug
+[Mm]akefile.Release
+*.vcxproj
+*.sln
+*.suo
+*.user
+*.ncb
+*.opensdf
+*.sdf
+*.aps
+*.manifest
+*.filters
+*.layout
+
+
+# Archivos temporales y de copia de seguridad
+*~
+*.bak
+*.tmp
