@@ -18,6 +18,7 @@ vertex square_vertices[4];
 
 unsigned int triangle_i[6];
 
+float tex_indices[8];
 void add_triangle_attribute(vertex *triangle, vec3 addPosition,
                             unsigned int attribute);
 
@@ -77,6 +78,13 @@ vertex two_triangles[] = {
     {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, // Inferior izquierdo
     {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},   // Superior derecho
     {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}},  // Superior izquierdo
+};
+
+float tex_indices[] = {
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    1.0f, 1.0f, 
+    0.0f, 1.0f
 };
 
 vertex square_vertices[] = {

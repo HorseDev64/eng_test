@@ -1,3 +1,13 @@
+#include "graphics.h"
+
+void omla()
+{
+    unsigned int face;
+    glGenTextures(1, &face);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, face);
+
+}
 /*#pragma once
 #include "graphics.h"
 #include <stdio.h>
@@ -141,3 +151,5 @@ unsigned int vert_shader, frag_shader;
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triangle_i), triangle_i, GL_STATIC_DRAW);
 
 }*/
+
+    

@@ -9,6 +9,11 @@ extern char *_root;
 int get_executable_dir(char *out, size_t size);
 int initRoot();
 void gcnt();
+
+int dir_get_size(const char* file_dir);
+void dir_get_file(char* destination, int length, const char *file_dir);
+
+
 #ifdef DIR_IMPLEMENT
 
 /* */
@@ -16,6 +21,35 @@ void gcnt();
 int path_count = 0;
 char* build_root = 0;
 char* _root = 0;
+
+int dir_get_size(const char *file_dir)
+{
+    return strlen(file_dir) + strlen(_root) + 2;
+}
+void dir_get_file(char *destination, int length, const char *file_dir)
+{
+
+    int last = 0;
+    for(int i = 0; i < length; i++)
+    {
+        if(!last && _root[i] == '\0')
+        {
+            destination[i] = '/';
+            last = i + 1;
+            continue;
+        }
+        if(!last)
+        {
+            destination[i] = _root[i];
+        }
+        else
+        {
+            destination[i] = file_dir[i - last];
+        }
+    }
+
+    destination[length - 1] = '\0';
+}
 
 int initRoot()
 {
