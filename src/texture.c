@@ -1,6 +1,6 @@
 #include "graphics.h"
-#include <texture.h>
 #define STB_IMAGE_IMPLEMENTATION
+#include <texture.h>
 
 void cb_genTexture(cb_texture *texture, GLenum type, GLint layer, GLenum format,
                    const char *image)
@@ -16,7 +16,7 @@ void cb_genTexture(cb_texture *texture, GLenum type, GLint layer, GLenum format,
     if(type == GL_TEXTURE_2D)
     {
 
-        glTexImage2D(type, 0, format, width, height, NULL, format,
+        glTexImage2D(type, 0, format, width, height, 0, format,
                      GL_UNSIGNED_BYTE, file);
     }
     else if(type == GL_TEXTURE_3D)
