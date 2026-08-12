@@ -9,6 +9,7 @@
 #define PRIMITIVES_IMPLEMENTATION
 #include <primitives.h>
 #include <shader.h>
+#include <texture.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
