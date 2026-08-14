@@ -13,11 +13,17 @@
 typedef struct
 {
     GLint layer;
-    GLint id;
+    unsigned int id;
     GLenum type;
+    GLenum format;
 }cb_texture;
 
 
 void cb_genTexture(cb_texture* texture, GLenum type, GLint layer, GLenum format, const char* image);
+void cb_defaultconfigureTexture2D(cb_texture *texture, int config_option);
 
+void cb_configureTexture(cb_texture *texture, GLenum target, GLenum name,
+                         GLint param, bool genMipmap);
+
+void cb_textureImage(cb_texture* texture, const char* image);
 

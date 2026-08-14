@@ -48,6 +48,7 @@ void dir_get_file(char *destination, int length, const char *file_dir)
         }
     }
 
+    printf("lenght: %i\n", length);
     destination[length - 1] = '\0';
 }
 

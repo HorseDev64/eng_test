@@ -20,4 +20,4 @@ cmake -S "$SCRIPT_DIR/deps/glfw-3.4" -B "$SCRIPT_DIR/deps/glfw-3.4/build" \
 cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR/build" \
   -DGLFW_BUILD_WAYLAND=ON \
   -DGLFW_BUILD_X11=ON \
-  -DBUILD_SHARED_LIBS=OFF   
+  -DBUILD_SHARED_LIBS=OFF 

@@ -6,17 +6,24 @@ void cb_genTexture(cb_texture *texture, GLenum type, GLint layer, GLenum format,
                    const char *image)
 {
 
-    glActiveTexture(layer);
+    texture->layer = layer;
+    texture->format = format;
+    glActiveTexture(texture->layer);
     glGenTextures(1, &texture->id);
     glBindTexture(type, texture->id);
 
     int width, height, nrChannels;
     unsigned char *file = stbi_load(image, &width, &height, &nrChannels, 0);
 
+    if(!file)
+    {
+        printf("ERROR::couldnt load texture\n");
+        return;
+    }
     if(type == GL_TEXTURE_2D)
     {
 
-        glTexImage2D(type, 0, format, width, height, 0, format,
+        glTexImage2D(type, 0, texture->format, width, height, 0, texture->format,
                      GL_UNSIGNED_BYTE, file);
     }
     else if(type == GL_TEXTURE_3D)
@@ -24,7 +31,6 @@ void cb_genTexture(cb_texture *texture, GLenum type, GLint layer, GLenum format,
         printf("i havent done anything here lol\n");
     }
 
-    printf("%i\n", &texture);
 
     stbi_image_free(file);
 }
@@ -70,4 +76,24 @@ void cb_configureTexture(cb_texture *texture, GLenum target, GLenum name,
     glActiveTexture(texture->layer);
     glBindTexture(texture->type, texture->id);
     glTexParameteri(target, name, param);
+}
+
+
+void cb_textureImage(cb_texture* texture, const char* image){
+    glActiveTexture(texture->layer);
+    glGenTextures(1, &texture->id);
+    glBindTexture(texture->type, texture->id);
+
+    int width, height, nrChannels;
+    unsigned char *file = stbi_load(image, &width, &height, &nrChannels, 0);
+
+    if(!file)
+    {
+        printf("couldnt load texture\n");
+        return;
+    }
+
+        glTexImage2D(texture->type, 0, texture->format, width, height, 0, texture->format,
+                     GL_UNSIGNED_BYTE, file);
+ 
 }

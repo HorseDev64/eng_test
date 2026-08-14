@@ -9,12 +9,12 @@
 #define PRIMITIVES_IMPLEMENTATION
 #include <primitives.h>
 #include <shader.h>
-#include <texture.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <texture.h>
 #include <window.h>
-//#include <texture.h>
+// #include <texture.h>
 
 void process_input(GLFWwindow *window)
 {
@@ -30,8 +30,8 @@ int main()
     //=============INIT CONFIG================
     //=================================
 
-    //cb_texture tex = {0};
-    //    cb_genTexture(&tex);
+    // cb_texture tex = {0};
+    //     cb_genTexture(&tex);
     initRoot();
     glfw_hints();
     GLFWwindow *window = genWindow(800, 800, "ventanita uwu");
@@ -101,95 +101,94 @@ int main()
 
     // in case of using the GL_CLAMP_TO_BORDER option, remember to set the
     // filler color
+    //=================================
+    //==========TEXTURE SETTS=============
 
-    unsigned int wood_tex;
-    glGenTextures(1, &wood_tex);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, wood_tex);
+    char wood_dir[dir_get_size("assets/textures/wooden_container.jpg")],
+        face_dir[dir_get_size("assets/textures/awesomeface.png")];
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_NEAREST_MIPMAP_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nrChannels;
-    char wood_dir[dir_get_size("assets/textures/wooden_container.jpg")];
     dir_get_file(wood_dir, sizeof(wood_dir),
                  "assets/textures/wooden_container.jpg");
+    dir_get_file(face_dir, sizeof(face_dir), "assets/textures/awesomeface.png");
 
+    //cb_texture wood, face;
+    unsigned int wood, face;
+    //stbi_set_flip_vertically_on_load(true);
+    //cb_genTexture(&wood, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, wood_dir);
+    //cb_defaultconfigureTexture2D(&wood, CB_TEXTURE_CONFIG_BASIC0);
+    int width, height, nrChannels;
     unsigned char *data = stbi_load(wood_dir, &width, &height, &nrChannels, 0);
+    glGenTextures(1, &wood);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, wood);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     if(!data)
     {
-        printf("texture could not be loaded\n");
+        printf("ERROR::couldnt load texture\n");
         return 1;
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
+
+
     stbi_image_free(data);
-    width = 0;
-    height = 0;
-    nrChannels = 0;
-    unsigned int face;
+    //cb_genTexture(&face, GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, face_dir);
+    //cb_defaultconfigureTexture2D(&face, CB_TEXTURE_CONFIG_BASIC1);
     glGenTextures(1, &face);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, face);
-    stbi_set_flip_vertically_on_load(true);
-    char face_dir[dir_get_size("assets/textures/awesomeface.png")];
-    dir_get_file(face_dir, sizeof(face_dir), "assets/textures/awesomeface.png");
-
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     data = stbi_load(face_dir, &width, &height, &nrChannels, 0);
+
     if(!data)
     {
-        printf("texture could not be loaded\n");
+        printf("ERROR::couldnt load texture\n");
         return 1;
     }
-        glGenerateMipmap(GL_TEXTURE_2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
-
-
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, data);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glUseProgram(vertex_shader.program);
-    glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), 0.2f);
-    glUniform1i(glGetUniformLocation(vertex_shader.program, "ourTex"), 0);
-    glUniform1i(glGetUniformLocation(vertex_shader.program, "tex2"), 1);
+    glUniform1f(glGetUniformLocation(vertex_shader.program, "ourTex"), 0);
+    glUniform1f(glGetUniformLocation(vertex_shader.program, "tex2"), 1);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    
     float v = 0;
     while(!glfwWindowShouldClose(window))
     {
         glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         process_input(window);
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, wood_tex);
 
         if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         {
-            v +=0.02f;
-            printf("esto funciona\n");
-            
-        }if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        {
-            v -=0.02f;
-            
+            v += 0.02f;
         }
+        if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        {
+            v -= 0.02f;
+        }
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, wood);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, face);
-        glBindVertexArray(VAO);
+
         glUseProgram(vertex_shader.program);
-    glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), v);
-        glUniform4f(acolor, 1.0f, 0.3f, 0.4f, 1.0f);
+        glBindVertexArray(VAO);
+        glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), v);
+
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
