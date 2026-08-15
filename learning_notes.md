@@ -49,3 +49,6 @@ Texture 0        Texture 1        Texture 2
 
 also, remember, the first step to make a texture, is configure how the target texture is gonna behave in the axis we define
 (xyz is changed for str);
+
+
+PLEASE REMEMBER: SAMPLER2D is an INT, NOT a FLOAT, to set an uniform, you must set it as an INT

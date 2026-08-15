@@ -112,57 +112,16 @@ int main()
     dir_get_file(face_dir, sizeof(face_dir), "assets/textures/awesomeface.png");
 
     //cb_texture wood, face;
-    unsigned int wood, face;
+    cb_texture  wood, face;
     //stbi_set_flip_vertically_on_load(true);
-    //cb_genTexture(&wood, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, wood_dir);
-    //cb_defaultconfigureTexture2D(&wood, CB_TEXTURE_CONFIG_BASIC0);
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load(wood_dir, &width, &height, &nrChannels, 0);
-    glGenTextures(1, &wood);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, wood);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    if(!data)
-    {
-        printf("ERROR::couldnt load texture\n");
-        return 1;
-    }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-
-
-    stbi_image_free(data);
-    //cb_genTexture(&face, GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, face_dir);
-    //cb_defaultconfigureTexture2D(&face, CB_TEXTURE_CONFIG_BASIC1);
-    glGenTextures(1, &face);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, face);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    data = stbi_load(face_dir, &width, &height, &nrChannels, 0);
-
-    if(!data)
-    {
-        printf("ERROR::couldnt load texture\n");
-        return 1;
-    }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-
+    cb_genTexture(&wood, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, wood_dir);
+    cb_defaultconfigureTexture2D(&wood, CB_TEXTURE_CONFIG_BASIC0);
+    cb_genTexture(&face, GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, face_dir);
+    cb_defaultconfigureTexture2D(&face, CB_TEXTURE_CONFIG_BASIC1);
     glUseProgram(vertex_shader.program);
-    glUniform1f(glGetUniformLocation(vertex_shader.program, "ourTex"), 0);
-    glUniform1f(glGetUniformLocation(vertex_shader.program, "tex2"), 1);
-        glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), 0.2f);
+    glUniform1i(glGetUniformLocation(vertex_shader.program, "ourTex"), 0);
+    glUniform1i(glGetUniformLocation(vertex_shader.program, "tex2"), 1);
+    glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), 0.2f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     
@@ -181,10 +140,10 @@ int main()
         {
             v -= 0.02f;
         }
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, wood);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, face);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, wood);
+        //glActiveTexture(GL_TEXTURE1);
+        //glBindTexture(GL_TEXTURE_2D, face);
 
         glUseProgram(vertex_shader.program);
         glBindVertexArray(VAO);
