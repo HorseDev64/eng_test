@@ -162,6 +162,7 @@ int main()
     glUseProgram(vertex_shader.program);
     glUniform1f(glGetUniformLocation(vertex_shader.program, "ourTex"), 0);
     glUniform1f(glGetUniformLocation(vertex_shader.program, "tex2"), 1);
+        glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), 0.2f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     
