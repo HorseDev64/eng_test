@@ -1,13 +1,14 @@
 #include "graphics.h"
 #include "math/vector.h"
-#include "os/get_dir.h"
-#include <GL/gl.h>
-#define VERTEX_SHADER_DIR "src/shaders/vertex_shader.glsl"
-#define FRAGMENT_SHADER_DIR "src/shaders/fragment_shader.glsl"
+#define VERTEX_SHADER_DIR "/src/shaders/vertex_shader.glsl"
+#define FRAGMENT_SHADER_DIR "/src/shaders/fragment_shader.glsl"
 #define SHADERS_DIR "src/shaders/"
+
+#define DIRECTORY_IMPLEMENTATION
+#define FILES_IMPLEMENTATION
 #define WINDOW_IMPLEMENTATION
-#define FILE_LOADER_DEF
 #define PRIMITIVES_IMPLEMENTATION
+#include <os/directory.h>
 #include <buffer.h>
 #include <primitives.h>
 #include <shader.h>
@@ -32,9 +33,6 @@ int main()
     //=============INIT CONFIG================
     //=================================
 
-    // cb_texture tex = {0};
-    //     cb_genTexture(&tex);
-    initRoot();
     glfw_hints();
     GLFWwindow *window = genWindow(800, 800, "ventanita uwu");
     glfwMakeContextCurrent(window);
@@ -45,17 +43,16 @@ int main()
     // REJECT MALLOC
 
     cb_shader vertex_shader = {0}, fragment_shader = {0};
-    sh_init_shader_program(GL_VERTEX_SHADER, &vertex_shader.program,
-                           &vertex_shader, VERTEX_SHADER_DIR);
-    sh_init_shader_program(GL_FRAGMENT_SHADER, &vertex_shader.program,
-                           &fragment_shader, FRAGMENT_SHADER_DIR);
-    sh_link_shader_program(vertex_shader.program);
-
-    sh_delete_shader_id(&vertex_shader);
-    sh_delete_shader_id(&fragment_shader);
-
+    g_program program;
+   
     //    add_triangle_attribute(second_triangle, (vec3){-0.5f, 0.0f, 0.0f},
     //    CB_POSITION);
+
+    genShader(&vertex_shader, GL_VERTEX_SHADER, VERTEX_SHADER_DIR);
+    genShader(&fragment_shader, GL_FRAGMENT_SHADER, FRAGMENT_SHADER_DIR);
+    genProgram(&program, 1 , &vertex_shader);
+    genProgram(&program, 1 , &fragment_shader);
+
 
     // add_triangle_attribute((vertex *)two_triangles + 3,
     //                        (vec3){-0.5f, 0.0f, 0.0f}, CB_POSITION);
@@ -87,33 +84,34 @@ int main()
     //========================================
 
     // move_triangle_position(triangle, (vec3){0.2f, -0.5f, 0.0f});
-    int acolor = glGetUniformLocation(vertex_shader.program, "aColor");
+    int acolor = glGetUniformLocation(program.id, "aColor");
     glUniform4f(acolor, 1.0f, 0.3f, 0.4f, 1.0f);
-    int offsetx = glGetUniformLocation(vertex_shader.program, "offsetx");
+    int offsetx = glGetUniformLocation(program.id, "offsetx");
 
     // in case of using the GL_CLAMP_TO_BORDER option, remember to set the
     // filler color
     //=================================
     //==========TEXTURE SETTS=============
 
-    char wood_dir[dir_get_size("assets/textures/wooden_container.jpg")],
-        face_dir[dir_get_size("assets/textures/awesomeface.png")];
-
-    dir_get_file(wood_dir, sizeof(wood_dir),
-                 "assets/textures/wooden_container.jpg");
-    dir_get_file(face_dir, sizeof(face_dir), "assets/textures/awesomeface.png");
+    cb_path wood_dir, face_dir;
+    path_to_exec(&wood_dir);
+    path_to_exec(&face_dir);
+    step_back_path(&wood_dir, 2);
+    step_back_path(&face_dir, 2);
+    append_two_paths(&wood_dir, "/assets/textures/wooden_container.jpg");
+    append_two_paths(&face_dir, "/assets/textures/awesomeface.png");
 
     // cb_texture wood, face;
     cb_texture wood, face;
     // stbi_set_flip_vertically_on_load(true);
-    cb_genTexture(&wood, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, wood_dir);
+    cb_genTexture(&wood, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, wood_dir.path);
     cb_defaultconfigureTexture2D(&wood, CB_TEXTURE_CONFIG_BASIC0);
-    cb_genTexture(&face, GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, face_dir);
+    cb_genTexture(&face, GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, face_dir.path);
     cb_defaultconfigureTexture2D(&face, CB_TEXTURE_CONFIG_BASIC1);
-    glUseProgram(vertex_shader.program);
-    glUniform1i(glGetUniformLocation(vertex_shader.program, "ourTex"), 0);
-    glUniform1i(glGetUniformLocation(vertex_shader.program, "tex2"), 1);
-    glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), 0.2f);
+    glUseProgram(program.id);
+    glUniform1i(glGetUniformLocation(program.id, "ourTex"), 0);
+    glUniform1i(glGetUniformLocation(program.id, "tex2"), 1);
+    glUniform1f(glGetUniformLocation(program.id, "alpha2"), 0.2f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     float v = 0;
@@ -136,9 +134,9 @@ int main()
         // glActiveTexture(GL_TEXTURE1);
         // glBindTexture(GL_TEXTURE_2D, face);
 
-        glUseProgram(vertex_shader.program);
+        glUseProgram(program.id);
         glBindVertexArray(vao.id);
-        glUniform1f(glGetUniformLocation(vertex_shader.program, "alpha2"), v);
+        glUniform1f(glGetUniformLocation(program.id, "alpha2"), v);
 
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
 

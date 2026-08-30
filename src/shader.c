@@ -1,5 +1,5 @@
+
 #include "graphics.h"
-#define DIR_IMPLEMENT
 #include <shader.h>
 
 void sh_check_shader_compilation(unsigned int shader, char *name)
@@ -13,7 +13,7 @@ void sh_check_shader_compilation(unsigned int shader, char *name)
         printf("ERROR: compiling %s shader: \n %s\n", name, infoLog);
     }
 }
-void sh_check_program_linking4(unsigned int program)
+void sh_check_program_linking(unsigned int program)
 {
     int success;
     char infoLog[512];
@@ -25,45 +25,44 @@ void sh_check_program_linking4(unsigned int program)
     }
 }
 
-
-
-void sh_init_shader_program(GLenum shader_type, 
-                         unsigned int *program, cb_shader *shade,
-                         const char *shader_src_dir)
+void genShader(cb_shader* sh, GLenum type, const char* relative_path)
 {
-    char tmp_dir[dir_get_size(shader_src_dir)];
-    dir_get_file(tmp_dir, sizeof(tmp_dir), shader_src_dir);
+    cb_path path;
+    path_to_exec(&path);
+    step_back_path(&path, 2);
+    append_two_paths(&path, relative_path);
 
-    char tmp_src[fsize(shader_src_dir) + 1];
-    get_file_content(shader_src_dir, sizeof(tmp_src), tmp_src);
-    const char *src = tmp_src;
-
-    shade->id = glCreateShader(shader_type);
-    glShaderSource(shade->id, 1, &src, NULL);
-    glCompileShader(shade->id);
-    sh_check_shader_compilation(shade->id, "default");
-
-    if(*program)
-    {
-        glAttachShader(*program, shade->id);
-        return;
+    int size = strlen(path.path);
+    sh->src_path = malloc(size + 1);
+    for (int i = 0; i < size + 1; i++) {
+    
+        sh->src_path[i] = path.path[i];
     }
-    *program = glCreateProgram();
-    glAttachShader(*program, shade->id);
+    sh->src_path[size] = '\0';
 
-    shade->program = *program;
+    char sh_src[get_file_size(sh->src_path)];
+    get_file_contents(sh_src, sizeof(sh_src), sh->src_path);
+    const char* shsrc = sh_src;
+    sh->id = glCreateShader(type);
+    glShaderSource(sh->id, 1, &shsrc, NULL);
+    glCompileShader(sh->id);
+    sh_check_shader_compilation(sh->id, "a shader bro");
+
 }
 
-void sh_attach_shader(unsigned int *program, cb_shader *shader)
+void genProgram(g_program* program, int size, cb_shader* shaders)
 {
+    if(glIsProgram(program->id))
+    {
+        goto attach;
+    }
+    program->id = glCreateProgram();
 
-    glAttachShader(*program, shader->id);
-}
-void sh_delete_shader_id(cb_shader *shade) { glDeleteShader(shade->id); }
-
-void sh_link_shader_program(unsigned int program)
-{
-    glLinkProgram(program);
-    sh_check_program_linking4(program);
+attach:
+    for (int i = 0; i < size; i++) {
+        glAttachShader(program->id, shaders[i].id);
+    }
+    glLinkProgram(program->id);
+    sh_check_program_linking(program->id);
 }
 

@@ -43,3 +43,8 @@ Makefile
 *~
 *.bak
 *.tmp
+
+# Core dump files
+core
+core.*
+*.core
