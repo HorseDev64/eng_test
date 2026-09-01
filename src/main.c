@@ -1,5 +1,5 @@
 #include "graphics.h"
-#include "math/vector.h"
+
 #define VERTEX_SHADER_DIR "/src/shaders/vertex_shader.glsl"
 #define FRAGMENT_SHADER_DIR "/src/shaders/fragment_shader.glsl"
 #define SHADERS_DIR "src/shaders/"
@@ -9,10 +9,12 @@
 #define WINDOW_IMPLEMENTATION
 #define PRIMITIVES_IMPLEMENTATION
 #include <os/directory.h>
+#include <math/vector.h>
 #include <buffer.h>
 #include <primitives.h>
 #include <shader.h>
 #include <stdbool.h>
+#include <cglm/cglm.h>
 #include <stdio.h>
 #include <string.h>
 #include <texture.h>
@@ -104,14 +106,19 @@ int main()
     // cb_texture wood, face;
     cb_texture wood, face;
     // stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(true);
     cb_genTexture(&wood, GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, wood_dir.path);
     cb_defaultconfigureTexture2D(&wood, CB_TEXTURE_CONFIG_BASIC0);
     cb_genTexture(&face, GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA, face_dir.path);
     cb_defaultconfigureTexture2D(&face, CB_TEXTURE_CONFIG_BASIC1);
-    glUseProgram(program.id);
-    glUniform1i(glGetUniformLocation(program.id, "ourTex"), 0);
-    glUniform1i(glGetUniformLocation(program.id, "tex2"), 1);
-    glUniform1f(glGetUniformLocation(program.id, "alpha2"), 0.2f);
+    g_uniform tex1 = {.name = "ourTex"}, tex2 = {.name = "tex2"}, alpha = {.name = "alpha2"};
+    cbGetUniformLocation(&program, &tex1);
+    cbGetUniformLocation(&program, &tex2);
+    cbGetUniformLocation(&program, &alpha);
+    cbSetUniform(&program, tex1, 0);
+    cbSetUniform(&program, tex2, 1);
+    
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     float v = 0;

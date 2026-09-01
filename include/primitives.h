@@ -7,24 +7,24 @@
 #define CB_POSITION 1
 #define CB_COLOR 2
 
-vertex triangle[3];
+cb_vertex triangle[3];
 
-vertex second_triangle[3];
-vertex cube_vertices[36];
+cb_vertex second_triangle[3];
+cb_vertex cube_vertices[36];
 
-vertex two_triangles[6];
+cb_vertex two_triangles[6];
 
-vertex square_vertices[4];
+cb_vertex square_vertices[4];
 
 unsigned int triangle_i[6];
 
 float tex_indices[8];
-void add_triangle_attribute(vertex *triangle, vec3 addPosition,
+void add_triangle_attribute(cb_vertex *triangle, cb_vec3 addPosition,
                             unsigned int attribute);
 
 #ifdef PRIMITIVES_IMPLEMENTATION
 
-void add_triangle_attribute(vertex *triangle, vec3 addPosition,
+void add_triangle_attribute(cb_vertex *triangle, cb_vec3 addPosition,
                             unsigned int attribute)
 {
 
@@ -60,15 +60,15 @@ color_for:
     return;
 }
 unsigned int triangle_i[] = {0, 1, 2, 0, 3, 2};
-vertex triangle[] = {{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+cb_vertex triangle[] = {{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
                      {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
                      {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
 
-vertex second_triangle[] = {{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+cb_vertex second_triangle[] = {{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
                             {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
                             {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
 ;
-vertex two_triangles[] = {
+cb_vertex two_triangles[] = {
     // Triángulo 1
     {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, // Inferior izquierdo
     {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},  // Inferior derecho
@@ -87,13 +87,13 @@ float tex_indices[] = {
     0.0f, 1.0f
 };
 
-vertex square_vertices[] = {
+cb_vertex square_vertices[] = {
     {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
     {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
     {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
     {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}},
 };
-vertex cube_vertices[] = {
+cb_vertex cube_vertices[] = {
     // Frente (rojo)
     {{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}},
     {{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}},

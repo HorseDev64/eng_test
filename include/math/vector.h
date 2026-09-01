@@ -3,29 +3,29 @@
 typedef struct {
     float x;
     float y;
-}vec2;
+}cb_vec2;
 
 
 typedef struct {
     float x;
     float y;
     float z;
-}vec3;
+}cb_vec3;
 typedef struct {
     float x;
     float y;
     float z;
     float w;
-}vec4;
+}cb_vec4;
 
 typedef struct {
-    vec3 pos;
-    vec3 color;
-}vertex;
+    cb_vec3 pos;
+    cb_vec3 color;
+}cb_vertex;
 
 
 typedef struct{
-    vertex vertices[3] ;
+    cb_vertex vertices[3] ;
 
 }tri_face;
 

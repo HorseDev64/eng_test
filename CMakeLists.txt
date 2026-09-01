@@ -13,6 +13,7 @@ add_executable(TestEngine ${SOURCES})
 
 target_include_directories(TestEngine PRIVATE include)
 target_include_directories(TestEngine PRIVATE deps/stb)
+target_include_directories(TestEngine PRIVATE deps/cglm/include)
 
 target_link_libraries(TestEngine PRIVATE
     glfw

@@ -66,3 +66,31 @@ attach:
     sh_check_program_linking(program->id);
 }
 
+void cbGetUniformLocation(g_program* program, g_uniform *uniform)
+{
+    uniform->location = glGetUniformLocation(program->id, uniform->name);
+}
+void cbUniform1f(g_program* program, g_uniform uniform, float newValue)
+{
+    glUseProgram(program->id);
+    glUniform1f(uniform.location, newValue);
+}
+void cbUniformVec2(g_program* program, g_uniform uniform, cb_vec2 newValue){
+    glUseProgram(program->id);
+    glUniform2f(uniform.location, newValue.x, newValue.y);
+}
+
+void cbUniformVec3(g_program* program, g_uniform uniform, cb_vec3 newValue){
+    glUseProgram(program->id);
+    glUniform3f(uniform.location, newValue.x, newValue.y, newValue.z);
+
+}
+
+void cbUniform1i(g_program* program, g_uniform uniform, int newValue){
+    glUseProgram(program->id);
+    glUniform1i(uniform.location, newValue);
+
+}
+
+
+
