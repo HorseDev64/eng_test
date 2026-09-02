@@ -93,4 +93,8 @@ void cbUniform1i(g_program* program, g_uniform uniform, int newValue){
 }
 
 
-
+void cbUniformMat4(g_program* program, g_uniform uniform, float* newValue)
+{
+    glUseProgram(program->id);
+    glUniformMatrix4fv(uniform.location, 1, GL_FALSE, newValue);
+}

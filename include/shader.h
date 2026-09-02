@@ -9,8 +9,9 @@
 #define cbSetUniform(Program, Uniform, X) _Generic((X), \
     int: cbUniform1i, \
     float: cbUniform1f, \
-    vec2: cbUniformVec2, \
-    vec3: cbUniformVec3 \
+    cb_vec2: cbUniformVec2, \
+    cb_vec3: cbUniformVec3, \
+    float*: cbUniformMat4 \
     )(Program, Uniform, X)
 
 typedef struct
@@ -46,5 +47,6 @@ void cbUniform1f(g_program* program, g_uniform uniform, float newValue);
 void cbUniformVec2(g_program* program, g_uniform uniform, cb_vec2 newValue);
 void cbUniformVec3(g_program* program, g_uniform uniform, cb_vec3 newValue);
 void cbUniform1i(g_program* program, g_uniform uniform, int newValue);
+void cbUniformMat4(g_program* program, g_uniform uniform, float* newValue);
 
 

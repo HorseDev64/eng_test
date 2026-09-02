@@ -15,6 +15,7 @@
 #include <shader.h>
 #include <stdbool.h>
 #include <cglm/cglm.h>
+#include <cglm/affine.h>
 #include <stdio.h>
 #include <string.h>
 #include <texture.h>
@@ -121,11 +122,65 @@ int main()
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+
+    // TODO: CHECK MAT4.h FOR 
+    // UNDERSTANDING
+    //mat4 trans = GLM_MAT4_IDENTITY_INIT, scale = GLM_MAT4_IDENTITY_INIT;
+    //array float[4][4]
+
+    
+
+
+    mat4 projection = GLM_MAT4_IDENTITY_INIT, view = GLM_MAT4_IDENTITY_INIT, model = GLM_MAT4_IDENTITY_INIT, local = GLM_MAT4_IDENTITY_INIT;
+    
+    g_uniform uproj = {.name = "projection"}, uview = {.name = "view"}, umodel = {"model"}, ulocal = {.name = "local"};
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    // MODEL
+    glm_rotate(model, glm_rad(-45.0f), (vec3){0.0f, 1.0f, 0.0f});
+
+    //PROJECTION
+    glm_perspective(glm_rad(45.0f), (float)800.0f/(float)600.0f, 0.1f, 100.0f, projection);
+
+    //VIEW
+    glm_translate(view, (float[]){0.0f, 0.0f, -3.0f});
+
+    cbGetUniformLocation(&program, &uproj);
+    cbGetUniformLocation(&program, &umodel);
+    cbGetUniformLocation(&program, &uview);
+    cbGetUniformLocation(&program, &alpha);
+
+    cbSetUniform(&program, uproj, (float*)projection);
+    cbSetUniform(&program, uview, (float*)view);
+    cbSetUniform(&program, umodel, (float*)model);
+    
+
+
+
+    cbGenVertexArrays(1 , &vao);
+    cbGenGraphicBuffer(&vbo, GL_ARRAY_BUFFER, vao.id);
+    cbGraphicBufferData(&vbo, sizeof(learn_cube_vertices), learn_cube_vertices, GL_DYNAMIC_DRAW);
+    cbSetAttribute(&vbo, 3 , 0 , GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
+    cbSetAttribute(&vbo, 2 , 2 , GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+    vec3 cubePositions[] = {
+    { 0.0f,  0.0f,  0.0f}, 
+    { 2.0f,  5.0f, -15.0f}, 
+    {-1.5f, -2.2f, -2.5f},  
+    {-3.8f, -2.0f, -12.3f},  
+    { 2.4f, -0.4f, -3.5f},  
+    {-1.7f,  3.0f, -7.5f},  
+    { 1.3f, -2.0f, -2.5f},  
+    { 1.5f,  2.0f, -2.5f}, 
+    { 1.5f,  0.2f, -1.5f}, 
+    {-1.3f,  1.0f, -1.5f}  
+};
+    
     float v = 0;
+    glEnable(GL_DEPTH_TEST);
     while(!glfwWindowShouldClose(window))
     {
         glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         process_input(window);
 
         if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -136,16 +191,29 @@ int main()
         {
             v -= 0.02f;
         }
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, wood);
-        // glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, face);
+        
+        glActiveTexture(wood.layer);
+        glBindTexture(GL_TEXTURE_2D, wood.id);
+        glActiveTexture(face.layer);
+        glBindTexture(GL_TEXTURE_2D, face.id);
 
         glUseProgram(program.id);
-        glBindVertexArray(vao.id);
-        glUniform1f(glGetUniformLocation(program.id, "alpha2"), v);
 
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
+        glm_mat4_identity(model);
+        cbSetUniform(&program, umodel, (float*)model);
+        cbSetUniform(&program, alpha, v);
+        glBindVertexArray(vao.id);
+        //glDrawElements(GL_TRIANGLES, sizeof(tex_indices), GL_UNSIGNED_INT, 0);
+        for (int i = 0 ; i < 10; i++) {
+        
+            glm_mat4_identity(model);
+            glm_translate(model, cubePositions[i]);
+            glm_rotate(model, (float)glfwGetTime() * glm_rad(50.0f), (vec3){0.5f, 1.0f,1.0f});
+            cbSetUniform(&program, umodel, (float*)model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

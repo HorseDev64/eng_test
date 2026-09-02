@@ -1,4 +1,3 @@
 # Archivo de breakpoints generado por Neovim
 set inferior-tty /dev/pts/2
-break /home/horse/c/eng_test/src/shader.c:35
-break /home/horse/c/eng_test/src/main.c:108
+break /home/horse/c/eng_test/src/texture.c:43
